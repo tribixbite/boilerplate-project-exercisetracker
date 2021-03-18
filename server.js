@@ -15,10 +15,11 @@ app.get('/', (req, res) => {
 
 app.post('/api/exercise/new-user', function(req, res) {
   let newuser = req.body.username;
-  console.log(newuser);
   let userid = userIds.length;
   userIds.push(newuser);
   res.json({username: newuser, _id: userid})
+  console.log(`${newuser} will be userId: ${userid}`);
+
 
 });
 
