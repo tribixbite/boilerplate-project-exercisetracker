@@ -4,6 +4,8 @@ const cors = require('cors')
 const bodyParser = require('body-parser');
 require('dotenv').config()
 
+var userIds = [];
+
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors())
 app.use(express.static('public'))
@@ -12,8 +14,11 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/exercise/new-user', function(req, res) {
-  console.log(req.body.url);
-  let host = req.body.url;
+  let newuser = req.body.username;
+  console.log(newuser);
+  let userid = userIds.length;
+  userIds.push(newuser);
+  res.json({username: newuser, _id: userid})
 
 });
 
