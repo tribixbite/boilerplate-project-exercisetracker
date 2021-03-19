@@ -23,12 +23,19 @@ app.post('/api/exercise/new-user', function(req, res) {
 
 app.get('/api/exercise/users', (req, res) => {
   let userArray = [];
-  for (id in userIds) {
-    userArray.push({username: userIds[id], _id: id})
-  };
+  for (id in userIds) {userArray.push({username: userIds[id], _id: id})};
   console.log(userArray);
   res.json(userArray);
+});
 
+app.post('/api/exercise/add', function(req, res) {
+  let { userId: userId, description: description, duration: duration} = req.body;
+  /*let userId = req.body.userId;
+  let description = req.body.description;
+  let duration = req.body.duration;*/
+  //userIds.push(newuser);
+  //res.json({username: newuser, _id: userid})
+  console.log(`${description} will be userId: ${userId}`);
 });
 
 
