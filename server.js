@@ -19,10 +19,17 @@ app.post('/api/exercise/new-user', function(req, res) {
   userIds.push(newuser);
   res.json({username: newuser, _id: userid})
   console.log(`${newuser} will be userId: ${userid}`);
-
-
 });
 
+app.get('/api/exercise/users', (req, res) => {
+  let userArray = [];
+  for (id in userIds) {
+    userArray.push({username: userIds[id], _id: id})
+  };
+  console.log(userArray);
+  res.json(userArray);
+
+});
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
