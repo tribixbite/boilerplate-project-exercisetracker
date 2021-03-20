@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config()
 
 var userIds = [];
+var exerciseLogs = {};
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors())
@@ -15,10 +16,28 @@ app.get('/', (req, res) => {
 
 app.post('/api/exercise/new-user', function(req, res) {
   let newuser = req.body.username;
-  let userid = userIds.length;
+  let userId = userIds.length;
+  exerciseLogs[userId] = [];
   userIds.push(newuser);
-  res.json({username: newuser, _id: userid})
-  console.log(`${newuser} will be userId: ${userid}`);
+  res.json({username: newuser, _id: userId})
+  console.log(`${newuser} will be userId: ${userId}`);
+});
+
+
+
+app.post('/api/exercise/add', function(req, res) {
+  let { userId: userId, description: description, duration: duration, date: date} = req.body;
+  if (!date) {console.log(`no date`)};
+  
+  let utcDate = (!date) ? (Number((new Date()))) : (Number(new Date(date)));
+
+  console.log(`${description} will be userId: ${userId} and the date is ${date} and utcdate is ${utcDate}`);
+  console.log(new Date(utcDate).toDateString());
+  let exerciseRes = {"username": userIds[userId], "description": description, "duration": Number(duration), "_id": Number(userId), "date": (new Date(utcDate).toDateString())};
+  let exerciseObj = {"description": description, "duration": Number(duration), "date": (new Date(utcDate).toDateString())};
+  exerciseLogs[userId].push(exerciseObj);
+  console.log(`exercise log is now ${exerciseLogs[userId][0].toString()}`)
+  res.json(exerciseRes);
 });
 
 app.get('/api/exercise/users', (req, res) => {
@@ -28,24 +47,10 @@ app.get('/api/exercise/users', (req, res) => {
   res.json(userArray);
 });
 
-app.post('/api/exercise/add', function(req, res) {
-  let { userId: userId, description: description, duration: duration, date: date} = req.body;
-  if (!date) {console.log(`no date`)};
-
-  
-  
-  let utcDate = (!date) ? (Number((new Date()))) : (Number(new Date(date)));
-
-  /*let userId = req.body.userId;
-  let description = req.body.description;
-  let duration = req.body.duration;*/
-  //userIds.push(newuser);
-  //res.json({username: newuser, _id: userid})
-  console.log(`${description} will be userId: ${userId} and the date is ${date} and utcdate is ${utcDate}`);
-  console.log(new Date(utcDate).toDateString());
-  let expected = {"username": userIds[userId], "description": description, "duration": duration, "_id": userId, "date": (new Date(utcDate).toDateString())};
-  console.log(expected);
-  res.json({"username": userIds[userId], "description": description, "duration": Number(duration), "_id": Number(userId), "date": (new Date(utcDate).toDateString())});
+app.get('/api/exercise/log', (req, res) => {
+  let userId = req.params.userId;
+  console.log(exerciseLogs[userId]);
+  res.json(exerciseLogs[userId]);
 });
 
 
