@@ -29,13 +29,23 @@ app.get('/api/exercise/users', (req, res) => {
 });
 
 app.post('/api/exercise/add', function(req, res) {
-  let { userId: userId, description: description, duration: duration} = req.body;
+  let { userId: userId, description: description, duration: duration, date: date} = req.body;
+  if (!date) {console.log(`no date`)};
+
+  
+  
+  let utcDate = (!date) ? (Number((new Date()))) : (Number(new Date(date)));
+
   /*let userId = req.body.userId;
   let description = req.body.description;
   let duration = req.body.duration;*/
   //userIds.push(newuser);
   //res.json({username: newuser, _id: userid})
-  console.log(`${description} will be userId: ${userId}`);
+  console.log(`${description} will be userId: ${userId} and the date is ${date} and utcdate is ${utcDate}`);
+  console.log(new Date(utcDate).toDateString());
+  let expected = {"username": userIds[userId], "description": description, "duration": duration, "_id": userId, "date": (new Date(utcDate).toDateString())};
+  console.log(expected);
+  res.json({"username": userIds[userId], "description": description, "duration": Number(duration), "_id": Number(userId), "date": (new Date(utcDate).toDateString())});
 });
 
 
