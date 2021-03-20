@@ -23,8 +23,6 @@ app.post('/api/exercise/new-user', function(req, res) {
   console.log(`${newuser} will be userId: ${userId}`);
 });
 
-
-
 app.post('/api/exercise/add', function(req, res) {
   let { userId: userId, description: description, duration: duration, date: date} = req.body;
   if (!date) {console.log(`no date`)};
@@ -36,7 +34,7 @@ app.post('/api/exercise/add', function(req, res) {
   let exerciseRes = {"username": userIds[userId], "description": description, "duration": Number(duration), "_id": Number(userId), "date": (new Date(utcDate).toDateString())};
   let exerciseObj = {"description": description, "duration": Number(duration), "date": (new Date(utcDate).toDateString())};
   exerciseLogs[userId].push(exerciseObj);
-  console.log(`exercise log is now ${exerciseLogs[userId][0].toString()}`)
+  console.log(`exercise log is now ${exerciseLogs[userId][0]['description'].toString()}`)
   res.json(exerciseRes);
 });
 
@@ -50,7 +48,8 @@ app.get('/api/exercise/users', (req, res) => {
 app.get('/api/exercise/log', (req, res) => {
   let userId = req.params.userId;
   console.log(exerciseLogs[userId]);
-  res.json(exerciseLogs[userId]);
+  let log = [exerciseLogs[userId]];
+  res.json({'log': log});
 });
 
 
