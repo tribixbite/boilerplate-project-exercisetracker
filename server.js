@@ -46,13 +46,31 @@ app.get('/api/exercise/users', (req, res) => {
 });
 
 app.get('/api/exercise/log', (req, res) => {
-  let { userId: userId, from: fromDate, to: toDate, limit: limit} = req.params;
+  let { userId: userId, from: fromDate, to: toDate, limit: limit} = req.query;
+
   let log = [exerciseLogs[userId]];
-
-  let limitCheck = (!limit) ? (1000) : limit.parseInt();
+  console.log(log[0]);
+  if (log[0] == undefined) {
+    console.log("no userid match")
+    return res.send("no log entries for that user")
+    };
+  let limitCheck = (!limit) ? (1000) : parseInt(limit);
   let utcToDate = (!toDate) ? (Number((new Date()))) : (Number(new Date(toDate)));
-  let utcFromDate = (Number(new Date(fromDate)));
+  
+  console.log(fromDate + "is fromdate");
+  if (fromDate) {
+    var utcFromDate = (Number(new Date(fromDate)));
 
+    let dateLog = [];
+    for (logEntry in log) {
+      let utcLogDate = Number(new Date(log[logEntry].date));
+      console.log(`this log date is ${utcLogDate}`)
+      if (utcFromDate <= utcLogDate <= utcToDate || logEntry +1 <= limitCheck){
+        console.log("date in parameters");
+
+      }
+    }
+  };
   console.log(`${limitCheck} is limit and ${utcToDate} is todate`);
   console.log(exerciseLogs[userId]);
   console.log(log.length);
