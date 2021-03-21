@@ -46,11 +46,17 @@ app.get('/api/exercise/users', (req, res) => {
 });
 
 app.get('/api/exercise/log', (req, res) => {
-  let userId = req.params.userId;
-  console.log(exerciseLogs[userId]);
+  let { userId: userId, fromDate: from, toDate: to, limit: limit} = req.params;
   let log = [exerciseLogs[userId]];
-  res.json({'log': log});
+
+  //let exerciseLogArray = [exerciseLogs[userId]];
+  console.log(exerciseLogs[userId]);
+  console.log(log.length);
+
+  res.json({'log': log, 'count': log.length});
 });
+
+
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
