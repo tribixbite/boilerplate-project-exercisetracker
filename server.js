@@ -46,10 +46,14 @@ app.get('/api/exercise/users', (req, res) => {
 });
 
 app.get('/api/exercise/log', (req, res) => {
-  let { userId: userId, fromDate: from, toDate: to, limit: limit} = req.params;
+  let { userId: userId, from: fromDate, to: toDate, limit: limit} = req.params;
   let log = [exerciseLogs[userId]];
 
-  //let exerciseLogArray = [exerciseLogs[userId]];
+  let limitCheck = (!limit) ? (1000) : limit.parseInt();
+  let utcToDate = (!toDate) ? (Number((new Date()))) : (Number(new Date(toDate)));
+  let utcFromDate = (Number(new Date(fromDate)));
+
+  console.log(`${limitCheck} is limit and ${utcToDate} is todate`);
   console.log(exerciseLogs[userId]);
   console.log(log.length);
 
