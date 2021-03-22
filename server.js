@@ -6,6 +6,7 @@ require('dotenv').config()
 
 var userIds = [];
 var exerciseLogs = {};
+process.env.TZ = 'UTC';
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors())
@@ -15,6 +16,8 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/exercise/new-user', function(req, res) {
+  console.log(`new user request: ${JSON.stringify(req.body)}`);
+  
   let newuser = req.body.username;
   let userId = userIds.length;
   exerciseLogs[userId] = [];
@@ -24,6 +27,7 @@ app.post('/api/exercise/new-user', function(req, res) {
 });
 
 app.post('/api/exercise/add', function(req, res) {
+  console.log(`add request: ${JSON.stringify(req.body)}`);
   let { userId: userId, description: description, duration: duration, date: date} = req.body;
   if (!date) {console.log(`no date`)};
   
@@ -47,32 +51,41 @@ app.get('/api/exercise/users', (req, res) => {
 
 app.get('/api/exercise/log', (req, res) => {
   let { userId: userId, from: fromDate, to: toDate, limit: limit} = req.query;
-
-  let log = [exerciseLogs[userId]];
-  console.log(log[0]);
-  if (log[0] == undefined) {
-    console.log("no userid match")
+  console.log(`log request: ${JSON.stringify(req.query)}`);
+  let log = exerciseLogs[userId];
+  console.log(log);
+  if (log == undefined) {
+    console.log("no log entries")
     return res.send("no log entries for that user")
     };
   let limitCheck = (!limit) ? (1000) : parseInt(limit);
   let utcToDate = (!toDate) ? (Number((new Date()))) : (Number(new Date(toDate)));
   
-  console.log(fromDate + "is fromdate");
+  console.log(fromDate + " is fromdate and todate is " + toDate);
   if (fromDate) {
     var utcFromDate = (Number(new Date(fromDate)));
 
     let dateLog = [];
+    let x = 1;
     for (logEntry in log) {
+      console.log(JSON.stringify(logEntry));
+      console.log(JSON.stringify(log));
+      console.log(log[logEntry].date.toString());
       let utcLogDate = Number(new Date(log[logEntry].date));
       console.log(`this log date is ${utcLogDate}`)
       if (utcFromDate <= utcLogDate <= utcToDate || logEntry +1 <= limitCheck){
         console.log("date in parameters");
-
+        dateLog.push(log[logEntry]);
       }
+    x++;
+    console.log(`old log: ${log.length} and new log: ${dateLog.length}`)
     }
+    log = dateLog;
   };
-  console.log(`${limitCheck} is limit and ${utcToDate} is todate`);
+  console.log(`${limit} was limit now: ${limitCheck} is limit and ${utcToDate} is todate`);
   console.log(exerciseLogs[userId]);
+  console.log("that should match:");
+  console.log(log);
   console.log(log.length);
 
   res.json({'log': log, 'count': log.length});
