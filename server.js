@@ -33,12 +33,12 @@ app.post('/api/exercise/add', function(req, res) {
   
   let utcDate = (!date) ? (Number((new Date()))) : (Number(new Date(date)));
 
-  console.log(`${description} will be userId: ${userId} and the date is ${date} and utcdate is ${utcDate}`);
+  console.log(`add exercise: ${description} for userId: ${userId} and the date is ${date} and utcdate is ${utcDate}`);
   console.log(new Date(utcDate).toDateString());
   let exerciseRes = {"username": userIds[userId], "description": description, "duration": Number(duration), "_id": Number(userId), "date": (new Date(utcDate).toDateString())};
   let exerciseObj = {"description": description, "duration": Number(duration), "date": (new Date(utcDate).toDateString())};
   exerciseLogs[userId].push(exerciseObj);
-  console.log(`exercise log is now ${exerciseLogs[userId][0]['description'].toString()}`)
+  console.log(`exercise log is now ${JSON.stringify(exerciseLogs[userId])}`)
   res.json(exerciseRes);
 });
 
@@ -68,8 +68,6 @@ app.get('/api/exercise/log', (req, res) => {
     let dateLog = [];
     let x = 1;
     for (logEntry in log) {
-      console.log(JSON.stringify(logEntry));
-      console.log(JSON.stringify(log));
       console.log(log[logEntry].date.toString());
       let utcLogDate = Number(new Date(log[logEntry].date));
       console.log(`this log date is ${utcLogDate}`)
@@ -78,7 +76,6 @@ app.get('/api/exercise/log', (req, res) => {
         dateLog.push(log[logEntry]);
       }
     x++;
-    console.log(`old log: ${log.length} and new log: ${dateLog.length}`)
     }
     log = dateLog;
   };
