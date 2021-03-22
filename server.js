@@ -82,9 +82,11 @@ app.get('/api/exercise/log', (req, res) => {
     }
     log = dateLog;
   };
+
   console.log(`${limit} was limit now: ${limitCheck} is limit and ${utcToDate} is todate`);
   console.log(exerciseLogs[userId]);
-  console.log("that should match:");
+  console.log("new filtered log:");
+  log = log.slice(0, limit);
   console.log(log);
   console.log(log.length);
 
